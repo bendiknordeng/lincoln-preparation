@@ -11,6 +11,23 @@ function MovieQuiz() {
     const [score, setScore] = useState(0);
     const [quizOver, setQuizOver] = useState(false);
     const [guessDirector, setGuessDirector] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 600); // Initialize based on the initial window width
+
+    useEffect(() => {
+        // Function to handle window resize event
+        const handleResize = () => {
+            // Update isMobile based on the new window width
+            setIsMobile(window.innerWidth <= 600); // Adjust the threshold as needed
+        };
+
+        // Add a resize event listener when the component mounts
+        window.addEventListener('resize', handleResize);
+
+        // Remove the resize event listener when the component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         console.log(movies[currentIndex]);
@@ -71,8 +88,8 @@ function MovieQuiz() {
                 </div>
             ) : (
                 <>
-                    <div className="flex-container">
-                        <div className="left-section">
+                    {isMobile ? (
+                        <div className="mobile-container">
                             <div className="current-movie">Film: {currentIndex + 1} / 20</div>
                             {movies.length > 0 && (
                                 <div className="quiz-section">
@@ -89,8 +106,6 @@ function MovieQuiz() {
                                     <p><i className="fa fa-star"></i> {movies[currentIndex].vote_average}</p>
                                 </div>
                             )}
-                        </div>
-                        <div className="right-section">
                             <div className="score">Poeng: {score}</div>
                             <div className="mode-section btn-group" role="group">
                                 <button
@@ -110,7 +125,48 @@ function MovieQuiz() {
                             </form>
                             {message && <div className={`message ${message.color}`}>{message.text}</div>}
                         </div>
-                    </div>
+                    ) : (
+                        <div className="flex-container">
+                            <div className="left-section">
+                                <div className="current-movie">Film: {currentIndex + 1} / 20</div>
+                                {movies.length > 0 && (
+                                    <div className="quiz-section">
+                                        <div style={{ position: 'relative' }}>
+                                            <a href={`https://www.imdb.com/title/${movies[currentIndex].imdb_id}`} target="_blank" rel="noopener noreferrer">
+                                                <img
+                                                    src={`https://image.tmdb.org/t/p/w500${movies[currentIndex].poster_path}`}
+                                                    alt={`${movies[currentIndex].title} poster`}
+                                                    className="poster-image"
+                                                />
+                                            </a>
+                                        </div>
+                                        <h3>{movies[currentIndex].title}</h3>
+                                        <p><i className="fa fa-star"></i> {movies[currentIndex].vote_average}</p>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="right-section">
+                                <div className="score">Poeng: {score}</div>
+                                <div className="mode-section btn-group" role="group">
+                                    <button
+                                        onClick={() => setGuessDirector(false)}
+                                        className={`btn btn-primary ${!guessDirector ? 'active' : ''}`}
+                                    > Utgivelsesår
+                                    </button>
+                                    <button
+                                        onClick={() => setGuessDirector(true)}
+                                        className={`btn btn-primary ${guessDirector ? 'active' : ''}`}
+                                    > Regissør
+                                    </button>
+                                </div>
+                                <form onSubmit={handleSubmit} className="input-section">
+                                    <input value={guess} onChange={(e) => setGuess(e.target.value)} placeholder={guessDirector ? 'Skriv en regissør' : 'Skriv et utgivelsesår'} />
+                                    <button className="submit-button" type="submit">Gjett</button>
+                                </form>
+                                {message && <div className={`message ${message.color}`}>{message.text}</div>}
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

@@ -1,10 +1,23 @@
+/* For screens with a maximum width of 600px (adjust as needed) */
+@media (max-width: 600px) {
+    .MovieQuiz {
+        padding: 10px;
+    }
+
+    .quiz-section {
+        width: 250px;
+        /* Adjust the width for smaller screens */
+    }
+}
+
 .MovieQuiz {
     text-align: center;
     padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;  /* Makes the container take the full height of the viewport */
+    height: 100vh;
+    /* Makes the container take the full height of the viewport */
     flex-direction: column;
 }
 
@@ -87,19 +100,23 @@ button {
     display: flex;
 }
 
-.left-section, .right-section {
+.left-section,
+.right-section {
     padding: 20px;
 }
 
 .right-section {
-    width: 300px;  /* Adjust this value to your preference */
+    width: 300px;
+    /* Adjust this value to your preference */
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-input, .submit-button {
-    height: 40px;  /* Adjust this value to your preference */
+input,
+.submit-button {
+    height: 40px;
+    /* Adjust this value to your preference */
 }
 
 .mode-section {
