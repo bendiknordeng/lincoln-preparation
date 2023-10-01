@@ -35,7 +35,7 @@ function MovieQuiz() {
 
     useEffect(() => {
         const fetchMoviesFromAPI = async () => {
-            const totalPagesToFetch = 5; // Number of pages to fetch
+            const totalPagesToFetch = 2; // Number of pages to fetch
             const allMovies = [];
 
             for (let page = 1; page <= totalPagesToFetch; page++) {
