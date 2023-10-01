@@ -34,10 +34,44 @@ function MovieQuiz() {
     }, [currentIndex, movies]);
 
     useEffect(() => {
-        fetchMovies('movie/top_rated').then(data => {
-            const shuffledMovies = data.results.sort(() => Math.random() - 0.5);
-            setMovies(shuffledMovies.slice(0, 20));  // Take the first 20 shuffled movies
-        });
+        const fetchMoviesFromAPI = async () => {
+            const totalPagesToFetch = 5; // Number of pages to fetch
+            const allMovies = [];
+
+            for (let page = 1; page <= totalPagesToFetch; page++) {
+                const data = await fetchMovies(page);
+                allMovies.push(...data.results);
+            }
+
+            // Remove duplicate movies based on their unique IDs
+            const uniqueMovies = removeDuplicates(allMovies, 'id');
+
+            // Shuffle the unique movies randomly
+            const shuffledMovies = shuffleArray(uniqueMovies);
+
+            setMovies(shuffledMovies);
+        };
+
+        // Function to remove duplicates from an array of objects based on a key
+        const removeDuplicates = (array, key) => {
+            const seen = new Set();
+            return array.filter((item) => {
+                const keyValue = item[key];
+                return seen.has(keyValue) ? false : seen.add(keyValue);
+            });
+        };
+
+        // Function to shuffle an array randomly
+        const shuffleArray = (array) => {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        };
+
+        fetchMoviesFromAPI();
     }, []);
 
     const handleSubmit = (e) => {
