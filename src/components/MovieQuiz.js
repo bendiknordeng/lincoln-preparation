@@ -86,20 +86,28 @@ function MovieQuiz() {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-        const correctAnswer = guessDirector ?
-            movies[currentIndex].director :
-            movies[currentIndex].release_date.split('-')[0];
-        const lastName = correctAnswer.split(' ').pop().toLowerCase();
-        const isCorrect = guess.toLowerCase() === correctAnswer.toLowerCase() || (guessDirector && guess.toLowerCase() === lastName);
-        const messageText = isCorrect ? `Riktig! Svaret var ${correctAnswer}` : `Feil. Svaret var ${correctAnswer}.`;
+
+        const movie = movies[currentIndex]; // Get the current movie
+        const correctAnswer = guessDirector ? movie.director : movie.release_date.split('-')[0];
+
+        // Extract the release year correctly and parse it as an integer
+        const releaseYear = parseInt(correctAnswer, 10);
+
+        // Check if the user's guess matches the release year
+        const isCorrect = guess.toLowerCase() === releaseYear.toString().toLowerCase();
+
+        const messageText = isCorrect ? `Riktig! Svaret var ${releaseYear}` : `Feil. Svaret var ${releaseYear}.`;
         setMessage({ text: messageText, color: isCorrect ? 'green' : 'red' });
+
         if (isCorrect) {
             setScore(score + 1);
         }
-        setCurrentIndex(currentIndex + 1);  // Move to the next movie
-        setGuess('');  // Clear the guess input field
+
+        setCurrentIndex(currentIndex + 1); // Move to the next movie
+        setGuess(''); // Clear the guess input field
         timeoutRef.current = setTimeout(() => setMessage(null), 5000);
-        if (currentIndex === 19) {  // Check if it's the last movie
+
+        if (currentIndex === 19) {
             setQuizOver(true);
         } else {
             setCurrentIndex(currentIndex + 1);
